@@ -1,31 +1,28 @@
 import React from "react";
 
-function Form({ q, handleInputChange, handleFormSubmit }) {
-  return (
-    <form>
-      <div className="form-group">
-        <input
-          className="form-control"
-          id="search"
-          type="text"
-          value={q}
-          placeholder="Search a Book"
-          name="q"
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-      <div className="pull-right">
-        <button
-          onClick={handleFormSubmit}
-          type="submit"
-          className="btn btn-lg btn-danger float-right"
-        >
-          Search
-        </button>
-      </div>
-    </form>
-  );
-}
-export default Form;
 
+function Form(props){
+return (
+  <div className="container">
+  <form>
+    <div className="form-group">
+      <label htmlFor="search"><h2>Search</h2></label>
+      <input
+        onChange={props.handleInputChange}
+        value={props.search}
+        name="search"
+        type="text"
+        className="form-control"
+        placeholder="Search a Book"
+        id="search"
+      />
+      <button onClick={props.handleFormSubmit} className="btn btn-dark mt-3 mb-5">
+        Search
+        </button>
+    </div>
+  </form>
+  </div>
+);
+}
+
+export default Form;
