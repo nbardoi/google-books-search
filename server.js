@@ -9,8 +9,6 @@ const routes = require("./routes");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Serve up static assets (usually on heroku)
-
 mongoose.connect(
   process.env.MONGODB_URI ||
   "mongodb://localhost:27017/googlebooks", { useNewUrlParser: true }
