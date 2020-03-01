@@ -13,7 +13,7 @@ app.use(express.json());
 
 mongoose.connect(
   process.env.MONGODB_URI ||
-  "mongodb://localhost/googlebooks", { useNewUrlParser: true }
+  "mongodb://localhost:27017/googlebooks", { useNewUrlParser: true }
 );
 
 // Define API routes here
