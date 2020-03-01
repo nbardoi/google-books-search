@@ -1,104 +1,63 @@
-import React, { Component } from "react";
-import Jumbotron from "../components/Jumbotron";
-import { List } from "../components/List";import API from "../utils/API";
-import Book from "../components/Book";
-import { Row, Container, Col } from "../components/Grid";
+import React from "react";
 import Form from "../components/Form";
+import Results from "../components/Results";
+import API from "../utils/API";
 
-class Search extends Component {
-  state = {
-    books: [],
-    q: "",
-    message: "Search For A Book To Begin!"
-  };
+class Search extends React.Component {
+    state = {
+        value: "",
+        books: []
+    };
 
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
-  };
+    componentDidMount() {
+        this.searchBook();
+    }
 
-  getBooks = () => {
-    API.getBooks(this.state.q)
-      .then(res =>
+    makeBook = bookData => {
+        return {
+            _id: bookData.id,
+            title: bookData.volumeInfo.title,
+            authors: bookData.volumeInfo.authors,
+            description: bookData.volumeInfo.description,
+            image: bookData.volumeInfo.imageLinks.thumbnail,
+            link: bookData.volumeInfo.previewLink
+        }
+    }
+
+    searchBook = query => {
+        API.getBook(query)
+            .then(res => this.setState({ books: res.data.items.map(bookData => this.makeBook(bookData)) }))
+            .catch(err => console.error(err));
+    };
+
+    handleInputChange = event => {
+        const name = event.target.name;
+        const value = event.target.value;
         this.setState({
-          books: res.data
-        })
-      )
-      .catch(() =>
-        this.setState({
-          books: [],
-          message: "No Books Found, Try a Different Query"
-        })
-      );
-  };
+            [name]: value
+        });
+    };
 
-  handleFormSubmit = event => {
-    event.preventDefault();
-    this.getBooks();
-  };
+    handleFormSubmit = event => {
+        event.preventDefault();
+        this.searchBook(this.state.search);
+    };
 
-  handleBookSave = id => {
-    const book = this.state.books.find(book => book.id === id);
-
-    API.saveBook({
-      googleId: book.id,
-      title: book.volumeInfo.title,
-      link: book.volumeInfo.infoLink,
-      authors: book.volumeInfo.authors,
-      description: book.volumeInfo.description,
-      image: book.volumeInfo.imageLinks.thumbnail
-    }).then(() => this.getBooks());
-  };
-
-  render() {
-    return (
-      <Container fluid>
-        <Row>
-            <Jumbotron>
-            <h1>Google Books Search (React)</h1>
-            <h4>Search for and save books of Interest!</h4>
-            </Jumbotron>
-          <Col>     
-              <Form
-                handleInputChange={this.handleInputChange}
-                handleFormSubmit={this.handleFormSubmit}
-                q={this.state.q}
-              />
-          </Col>
-        </Row>
-        <Row>
-        <Col>
-        {this.state.books.length ? (
-                <List>
-                  {this.state.books.map(book => (
-                    <Book
-                      key={book.id}
-                      title={book.volumeInfo.title}
-                      link={book.volumeInfo.infoLink}
-                      authors={book.volumeInfo.authors.join(", ")}
-                      description={book.volumeInfo.description}
-                      image={book.volumeInfo.imageLinks.thumbnail}
-                      Button={() => (
-                        <button
-                          onClick={() => this.handleBookSave(book.id)}
-                          className="btn btn-primary ml-2"
-                        >
-                          Save
-                        </button>
-                      )}
-                    />
-                  ))}
-                </List>
-              ) : (
-                <h3 className="text-center">{this.state.message}</h3>
-              )}
-        </Col>
-        </Row>
-      </Container>
-    );
-  }
+    render() {
+        return (
+            <div>
+                <Form
+                    search={this.state.search}
+                    handleInputChange={this.handleInputChange}
+                    handleFormSubmit={this.handleFormSubmit}
+                />
+                <div className="container">
+                    <h2>Results</h2>
+                    <Results books={this.state.books} />
+                </div>
+            </div>
+        )
+    }
 }
 
 export default Search;
