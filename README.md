@@ -7,8 +7,10 @@ A React-based Google Books Search that displays books on user searches. Search f
 
 1. Clone the repository
 2. Run npm install
-3. Run mongod to activate the MongoDB Database.
-4. Run npm start and the application will automatically open in the browser to localhost:3000.
+3. Cd into the client folder
+4. Run npm install again
+5. Run mongod to activate the MongoDB Database.
+6. Run npm start and the application will automatically open in the browser to localhost:3000.
 
 
 [Check out the App](https://google-books-search-nbardoi.herokuapp.com/)
